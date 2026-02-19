@@ -1,47 +1,64 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import TimeSlotSelector from './components/TimeSlotSelector.vue';
 import TableMap from './components/TableMap.vue';
 import ReservationForm from './components/ReservationForm.vue';
-import { ref } from 'vue';
 
-const selectedTableId = ref<number | null>(null);
 
-const onTableSelected = (id: number) => {
-  selectedTableId.value = id;
+import './assets/styles/restaurant.css';
+
+const selectedId = ref<number | null>(null);
+
+const handleTableSelection = (id: number) => {
+  selectedId.value = id;
+};
+
+const closeForm = () => {
+  selectedId.value = null;
 };
 </script>
 
 <template>
   <main class="container">
-    <h1>VueDining - Gestión de Reservas</h1>
+    <header>
+      <h1>VueDining - Gestión de Reservas</h1>
+    </header>
 
     <TimeSlotSelector />
 
     <div class="layout">
-      <TableMap @select-table="onTableSelected" />
+      <TableMap :selected-table-id="selectedId" @select-table="handleTableSelection" />
 
-      <ReservationForm v-if="selectedTableId" :table-id="selectedTableId" @close="selectedTableId = null" />
+      <ReservationForm v-if="selectedId" :table-id="selectedId" @close="closeForm" />
+
+      <div v-else class="empty-selection">
+        <p>Por favor, seleccione una mesa libre en el mapa para comenzar la reserva.</p>
+      </div>
     </div>
   </main>
 </template>
 
-<style>
+<style scoped>
 .container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: sans-serif;
+  padding: 2rem;
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
+header {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-@media (max-width: 768px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
+.empty-selection {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #6c757d;
 }
 </style>
