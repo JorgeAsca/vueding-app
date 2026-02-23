@@ -21,11 +21,10 @@ export const useRestaurantStore = defineStore('restaurant', {
     isTableAvailable(tableId: number): boolean {
       return !this.reservations.some(
         (res) => res.tableId === tableId && res.timeSlot === this.activeTimeSlot
-      )
+      );
     },
 
     addReservation(res: Reservation): boolean {
-      // Requisito: Validar que la mesa esté libre a esa hora [cite: 422]
       if (this.isTableAvailable(res.tableId)) {
         this.reservations.push(res);
         return true;
